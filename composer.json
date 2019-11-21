@@ -1,0 +1,29 @@
+{
+    "name": "da2e/generic-collection",
+    "description": "PHP-based implementation for generic collection",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Abrosimov",
+            "email": "abrosimovs@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DA2E\\GenericCollection\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DA2E\\GenericCollection\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "ext-curl": "*",
+        "phpunit/phpunit": "^7.5"
+    }
+}
