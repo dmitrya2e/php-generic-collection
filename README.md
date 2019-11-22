@@ -39,7 +39,36 @@ This library provides an OOP solution to have homogeneous types in a collection/
 * DA2E\GenericCollection\Type\ScalarType (corresponds to PHP built-in is_scalar() function).
 * DA2E\GenericCollection\Type\StringType (corresponds to PHP built-in is_string() function).
 
-## ObjectType
+Special types:
+
+* DA2E\GenericCollection\Type\CustomType: accepts a callback function with one argument to build a custom validator. E.g.:
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\CustomType;
+
+$collection = new GCollection(new CustomType(function ($value) {
+    return $value === 'foobar';
+}));
+
+$collection[] = 'foobar'; // valid
+$collection[] = 'bar'; // invalid
+```
+
+* DA2E\GenericCollection\Type\GCollectionType: a type for embedded GCollections. E.g.:
+
+```php
+
+use DA2E\GenericCollection\Type\GCollectionType;
+use DA2E\GenericCollection\Type\StringType;
+use DA2E\GenericCollection\GCollection;
+
+$collection = new GCollection(new GCollectionType());
+$collection[] = new GCollection(new StringType()); // valid
+$collection[] = new StringType(); // invalid
+```
+
+### ObjectType
 
 ObjectType optionally accepts a fully-qualified class name to validate that value implements the given class. e.g.:
 

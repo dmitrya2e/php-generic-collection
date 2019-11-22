@@ -20,7 +20,9 @@ class ObjectType implements TypeInterface
         }
 
         if ($this->fqn !== null && !($value instanceof $this->fqn)) {
-            throw new InvalidTypeException(sprintf('Object is not an implementation of %s class.', $this->fqn));
+            throw new InvalidTypeException(sprintf(
+                'Object %s is not an implementation of %s class.', get_class($value), $this->fqn
+            ));
         }
     }
 }
