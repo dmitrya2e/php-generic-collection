@@ -268,4 +268,38 @@ class GCollectionTest extends TestCase
 
         $this->assertSame(['b'], $c->slice(1, 1)->resetKeys()->toArray());
     }
+
+    public function testSort()
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->sort(function (array $items) {
+            usort($items, function ($a, $b) {
+                return $a > $b;
+            });
+
+            return $items;
+        });
+
+        $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
+
+        $c->sort(function (array $items) {
+            sort($items);
+
+            return $items;
+        });
+
+        $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
+
+        $c->sort(function (array $items) {
+            krsort($items);
+
+            return $items;
+        });
+
+        $this->assertSame([3, 2, 1], $c->resetKeys()->toArray());
+    }
 }

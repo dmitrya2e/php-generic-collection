@@ -87,7 +87,7 @@ class GCollection implements GCollectionInterface
     {
         shuffle($this->items);
 
-        return $this;
+        return new self($this->type, $this->items);
     }
 
     public function slice(int $offset, ?int $length, bool $preserveKeys = false): GCollectionInterface
@@ -108,6 +108,13 @@ class GCollection implements GCollectionInterface
     public function resetKeys(): GCollectionInterface
     {
         $this->items = array_values($this->items);
+
+        return $this;
+    }
+
+    public function sort(\Closure $p): GCollectionInterface
+    {
+        $this->items = $p($this->items);
 
         return $this;
     }

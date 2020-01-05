@@ -89,13 +89,12 @@ $type->validate($value);
 An example:
 
 ```php
-
 use DA2E\GenericCollection\GCollection;
 use DA2E\GenericCollection\Type\StringType;
 use DA2E\GenericCollection\Exception\InvalidTypeException;
 
 try {
-    $collection = new GCollection(new StringType());
+    $collection = new GCollection(new StringType()); // You can pass an array as 2nd argument as well.
     $collection[] = 'string'; // this one is fine
     $collection[] = 1; // this one will throw an exception
 } catch (InvalidTypeException $e) {
@@ -115,4 +114,46 @@ function foobar(GCollection $collection) {
     
     // ...
 }
+```
+
+## Additional functions of GCollectionInterface
+
+There many additional functions in GCollectionInterface (e.g. map, filter, slice, shuffle, etc.). Please refer to the interface to see all of the functions.
+
+### map
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\StringType;
+
+$collection = new GCollection(new StringType(), ['a' ,'b']);
+$collection->map(function ($item) {
+    return $item . '2';
+}); // Returns [ 'a2', 'b2', 'c2' ]
+```
+
+### filter
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\StringType;
+
+$collection = new GCollection(new StringType(), ['a' ,'b']);
+$collection->filter(function ($item) {
+    return $item === 'b';
+}); // Returns [ 'b' ]
+```
+
+### sort
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\StringType;
+
+$collection = new GCollection(new StringType(), ['a' ,'b']);
+$collection->sort(function (array $items) {
+    rsort($items); // Here you can call any sort function you wish.
+
+    return $items;
+}); // Returns [ 'b', 'a' ]
 ```
