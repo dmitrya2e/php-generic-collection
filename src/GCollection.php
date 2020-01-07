@@ -3,6 +3,7 @@
 namespace DA2E\GenericCollection;
 
 use DA2E\GenericCollection\Exception\InvalidTypeException;
+use DA2E\GenericCollection\Type\ObjectType;
 use DA2E\GenericCollection\Type\TypeInterface;
 
 /**
@@ -126,8 +127,15 @@ class GCollection implements GCollectionInterface
      */
     public function elementsShouldBeTypeOf(string $typeFQN)
     {
-        if (get_class($this->type) !== $typeFQN) {
-            throw new InvalidTypeException();
+        if (!($this->type instanceof $typeFQN)) {
+            if (!($this->type instanceof ObjectType) || !$this->type->getFqn()) {
+                // @TODO: this looks like a hack just to be able to pass a concrete object FQN instead of ObjectType.
+                throw new InvalidTypeException();
+            }
+
+            foreach ($this->items as $item) {
+                $this->type->validate($item);
+            }
         }
     }
 

@@ -5,6 +5,7 @@ namespace DA2E\GenericCollection\Test;
 use DA2E\GenericCollection\GCollection;
 use DA2E\GenericCollection\GCollectionInterface;
 use DA2E\GenericCollection\Type\MixedType;
+use DA2E\GenericCollection\Type\ObjectType;
 use DA2E\GenericCollection\Type\StringType;
 use PHPUnit\Framework\TestCase;
 
@@ -78,6 +79,17 @@ class GCollectionTest extends TestCase
         $c[] = '1';
 
         $c->elementsShouldBeTypeOf(StringType::class);
+    }
+
+    public function testElementShouldBeTypeOf_CheckConcreteObjectFQN()
+    {
+        $c = new GCollection(new ObjectType(\stdClass::class));
+        $c[] = new \stdClass();
+        $c[] = new \stdClass();
+
+        $c->elementsShouldBeTypeOf(\stdClass::class);
+
+        $this->assertTrue(true);
     }
 
     public function testToArray()

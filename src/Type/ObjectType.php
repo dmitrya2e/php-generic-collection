@@ -25,4 +25,9 @@ class ObjectType implements TypeInterface
             ));
         }
     }
+
+    public function getFqn(): ?string
+    {
+        return $this->fqn;
+    }
 }

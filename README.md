@@ -116,6 +116,21 @@ function foobar(GCollection $collection) {
 }
 ```
 
+If the collection contains object you could additionally assure that elements are instances of a specific class.
+
+```php
+function foobar(GCollection $collection) {
+    try {
+        $collection->elementsShouldBeTypeOf(ObjectType::class); // This is fine and valid but does not give a lot of information which exactly object is there.
+        $collection->elementsShouldBeTypeOf(YourAnyClass::class); // This is more verbose and clear. We know that we expect a concrete YourAnyClass objects.
+    } catch (InvalidTypeException $e) {
+        // handle exception
+    }
+    
+    // ...
+}
+```
+
 ## Additional functions of GCollectionInterface
 
 There many additional functions in GCollectionInterface (e.g. map, filter, slice, shuffle, etc.). Please refer to the interface to see all of the functions.
