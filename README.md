@@ -144,7 +144,7 @@ use DA2E\GenericCollection\Type\StringType;
 $collection = new GCollection(new StringType(), ['a' ,'b']);
 $collection->map(function ($item) {
     return $item . '2';
-}); // Returns [ 'a2', 'b2', 'c2' ]
+}); // Maps as [ 'a2', 'b2', 'c2' ]
 ```
 
 ### filter
@@ -156,7 +156,7 @@ use DA2E\GenericCollection\Type\StringType;
 $collection = new GCollection(new StringType(), ['a' ,'b']);
 $collection->filter(function ($item) {
     return $item === 'b';
-}); // Returns [ 'b' ]
+}); // Leaves only [ 'b' ]
 ```
 
 ### sort
@@ -166,9 +166,25 @@ use DA2E\GenericCollection\GCollection;
 use DA2E\GenericCollection\Type\StringType;
 
 $collection = new GCollection(new StringType(), ['a' ,'b']);
-$collection->sort(function (array $items) {
-    rsort($items); // Here you can call any sort function you wish.
+$collection->sort('sort'); // Can be one of: asort|arsort|ksort|krsort|rsort|sort
+```
 
-    return $items;
-}); // Returns [ 'b', 'a' ]
+### natsort
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\StringType;
+
+$collection = new GCollection(new StringType(), ['a' ,'b']);
+$collection->natSort('natsort'); // Can be one of: natcasesort|natsort
+```
+
+### usort
+
+```php
+use DA2E\GenericCollection\GCollection;
+use DA2E\GenericCollection\Type\StringType;
+
+$collection = new GCollection(new StringType(), ['a' ,'b']);
+$collection->userSort('usort', function ($a, $b) { return $a > $b; }); // Can be one of: uasort|uksort|usort
 ```

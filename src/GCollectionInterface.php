@@ -2,9 +2,11 @@
 
 namespace DA2E\GenericCollection;
 
+use DA2E\GenericCollection\Type\TypeInterface;
+
 interface GCollectionInterface extends \IteratorAggregate, \ArrayAccess, \Countable
 {
-    public function elementsShouldBeTypeOf(string $typeFQN);
+    public function elementsShouldBeTypeOf(string $typeFQN): GCollectionInterface;
 
     /**
      * Gets array representation of internal items.
@@ -79,30 +81,31 @@ interface GCollectionInterface extends \IteratorAggregate, \ArrayAccess, \Counta
     public function contains($item): bool;
 
     /**
-     * Shuffles items and returns a new collection.
+     * Shuffles items and returns the same collection.
      *
      * @return GCollectionInterface
      */
     public function shuffle(): GCollectionInterface;
 
     /**
-     * Slices items and returns a new collection.
+     * Slices items and returns the same collection.
      *
      * @return GCollectionInterface
      */
     public function slice(int $offset, ?int $length, bool $preserveKeys = false): GCollectionInterface;
 
     /**
-     * Maps items and returns a new collection.
+     * Maps items and returns the same collection.
      *
-     * @param \Closure $func Should accept single argument - the item. Should return mapped item.
+     * @param \Closure           $func    Should accept single argument - the item. Should return mapped item.
+     * @param null|TypeInterface $newType New type after mapping (leave empty if type is not changing)
      *
      * @return GCollectionInterface
      */
-    public function map(\Closure $func): GCollectionInterface;
+    public function map(\Closure $func, ?TypeInterface $newType = null): GCollectionInterface;
 
     /**
-     * Filters items and returns a new collection.
+     * Filters items and returns the same collection.
      *
      * @param \Closure $p Should accept single argument - the item. Should return bool.
      *
@@ -111,16 +114,38 @@ interface GCollectionInterface extends \IteratorAggregate, \ArrayAccess, \Counta
     public function filter(\Closure $p): GCollectionInterface;
 
     /**
-     * Resets keys of items and returns THE SAME collection.
+     * Resets keys of items and returns the same collection.
      *
      * @return GCollectionInterface
      */
     public function resetKeys(): GCollectionInterface;
 
     /**
-     * @param \Closure $p Should accept single argument - an array of items. Should return sorted array.
+     * Performs sorting and returns the same collection.
+     *
+     * @param string $sortFunctionName asort|arsort|ksort|krsort|rsort|sort
+     * @param int    $sortFlags        SORT_REGULAR|SORT_NUMERIC|SORT_STRING|SORT_LOCALE_STRING|SORT_NATURAL|SORT_FLAG_CASE
      *
      * @return GCollectionInterface
      */
-    public function sort(\Closure $p): GCollectionInterface;
+    public function sort(string $sortFunctionName, int $sortFlags = SORT_REGULAR): GCollectionInterface;
+
+    /**
+     * Performs natural sorting and returns the same collection.
+     *
+     * @param string $sortFunctionName natcasesort|natsort
+     *
+     * @return GCollectionInterface
+     */
+    public function natSort(string $sortFunctionName): GCollectionInterface;
+
+    /**
+     * Performs user sorting and returns the same collection.
+     *
+     * @param string   $sortFunctionName uasort|uksort|usort
+     * @param \Closure $closure          CMP function to sort
+     *
+     * @return GCollectionInterface
+     */
+    public function userSort(string $sortFunctionName, \Closure $closure): GCollectionInterface;
 }

@@ -239,8 +239,8 @@ class GCollectionTest extends TestCase
         $c[] = 'b';
         $c[] = 'c';
 
-        $this->assertSame(['b'], $c->slice(1, 1)->toArray());
-        $this->assertSame([1 => 'b'], $c->slice(1, 1, true)->toArray());
+        $this->assertSame(['b', 'c'], $c->slice(1, 2)->toArray());
+        $this->assertSame([1 => 'c'], $c->slice(1, 1, true)->toArray());
     }
 
     public function testMap()
@@ -250,11 +250,11 @@ class GCollectionTest extends TestCase
         $c[] = 'b';
         $c[] = 'c';
 
-        $c2 = $c->map(function ($item) {
+        $c->map(function ($item) {
             return $item . '2';
         });
 
-        $this->assertSame(['a2', 'b2', 'c2'], $c2->toArray());
+        $this->assertSame(['a2', 'b2', 'c2'], $c->toArray());
     }
 
     public function testFilter()
@@ -264,11 +264,11 @@ class GCollectionTest extends TestCase
         $c[] = 'b';
         $c[] = 'c';
 
-        $c2 = $c->filter(function ($item) {
+        $c->filter(function ($item) {
             return $item === 'b';
         });
 
-        $this->assertSame([1 => 'b'], $c2->toArray());
+        $this->assertSame([1 => 'b'], $c->toArray());
     }
 
     public function testResetKeys()
@@ -281,37 +281,109 @@ class GCollectionTest extends TestCase
         $this->assertSame(['b'], $c->slice(1, 1)->resetKeys()->toArray());
     }
 
-    public function testSort()
+    public function dataProvider_SortFunctions()
+    {
+        return [
+            ['asort'], ['arsort'], ['krsort'], ['ksort'], ['rsort'], ['sort'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider_SortFunctions
+     */
+    public function testSort(string $sortFunction)
     {
         $c = new GCollection(new MixedType());
         $c[] = 3;
         $c[] = 2;
         $c[] = 1;
 
-        $c->sort(function (array $items) {
-            usort($items, function ($a, $b) {
-                return $a > $b;
-            });
+        $c->sort($sortFunction);
 
-            return $items;
+        $this->assertTrue(true);
+    }
+
+    public function testSort_Sort()
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->sort('sort');
+
+        $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
+    }
+
+    public function dataProvider_NatSortFunctions()
+    {
+        return [
+            ['natsort'], ['natcasesort'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider_NatSortFunctions
+     */
+    public function testNatSort(string $sortFunction)
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->natSort($sortFunction);
+
+        $this->assertTrue(true);
+    }
+
+    public function testNatSort_NatSort()
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->natSort('natsort');
+
+        $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
+    }
+
+    public function dataProvider_UserSortFunctions()
+    {
+        return [
+            ['usort'], ['uasort'], ['uksort'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider_UserSortFunctions
+     */
+    public function testUserSort(string $sortFunction)
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->userSort($sortFunction, function ($a, $b) {
+            return 0;
+        });
+
+        $this->assertTrue(true);
+    }
+
+    public function testUserSort_Usort()
+    {
+        $c = new GCollection(new MixedType());
+        $c[] = 3;
+        $c[] = 2;
+        $c[] = 1;
+
+        $c->userSort('usort', function ($a, $b) {
+            return $a > $b;
         });
 
         $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
-
-        $c->sort(function (array $items) {
-            sort($items);
-
-            return $items;
-        });
-
-        $this->assertSame([1, 2, 3], $c->resetKeys()->toArray());
-
-        $c->sort(function (array $items) {
-            krsort($items);
-
-            return $items;
-        });
-
-        $this->assertSame([3, 2, 1], $c->resetKeys()->toArray());
     }
 }
